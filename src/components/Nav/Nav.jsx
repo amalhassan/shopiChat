@@ -75,7 +75,6 @@ const Nav = () => {
         items={[{content: 'Recommended Apps', icon: AppsMajor }, {content: 'App and sales channel setting', icon: SettingsMajor}]}
       />
     );
-  
     const searchBarComp = (
       <TopBar.SearchField
         onChange={handleSearchChange}
@@ -86,6 +85,7 @@ const Nav = () => {
     );
     const TopBarComp = (
       <TopBar
+          showNavigationToggle
           userMenu={userMenuComp}
           secondaryMenu={NotifyMenuComp}
           searchResultsVisible={search}
@@ -94,9 +94,16 @@ const Nav = () => {
           onSearchResultsDismiss={handleSearchResultsDismiss}
       />
     )
+    const logo = {
+      width: 124,
+      topBarSource:
+      "//s27.q4cdn.com/572064924/files/design/logo/shopify_logo_whitebg.svg",
+      url: '#',
+      accessibilityLabel: 'Shopify logo',
+    };
   return (
     <div style={{height:'70px'}}>
-      <Frame topBar={TopBarComp} />
+      <Frame topBar={TopBarComp} logo={logo}/>
     </div>
   );
 }
