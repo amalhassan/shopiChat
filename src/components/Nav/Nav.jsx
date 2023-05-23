@@ -1,11 +1,28 @@
 import React, {useState, useCallback} from 'react';
-import {Frame, TopBar, Icon, Text, HorizontalStack, ActionList} from '@shopify/polaris';
-import {ProfileMajor,  StoreMajor, LogOutMinor, NotificationMajor, FilterMinor, CircleTickOutlineMinor, AppsMajor, SettingsMajor,} from '@shopify/polaris-icons';
+import {Frame, TopBar, Icon, Text, HorizontalStack, ActionList, Navigation, Button} from '@shopify/polaris';
+import {ProfileMajor,  StoreMajor, LogOutMinor, NotificationMajor, FilterMinor, CircleTickOutlineMinor, AppsMajor, SettingsMajor, 
+  HomeMinor, 
+  OrdersMinor,
+  ProductsMinor,
+  StoreMinor,
+  CustomersMinor,
+  FinancesMinor,
+  AnalyticsMinor,
+  MarketingMinor, 
+  DiscountsMinor, 
+  ChevronRightMinor, 
+  PointOfSaleMajor, 
+  ButtonMinor,
+  InviteMinor,
+  SearchMinor,
+  WandMinor, 
+  SettingsMinor} from '@shopify/polaris-icons';
 const Nav = () => {
   const [userMenu, setUserMenu] = useState(false);
   const [notifyMenu, setNotifyMenu] = useState(false);
   const [search, setSearch] = useState(false);
   const [searchValue, setSearchValue] = useState('');
+  const [mobileNav, setMobileNav] = useState(false);
   const toggleUserMenu = useCallback(
     () => setUserMenu((userMenu) => !userMenu),
     [],
@@ -22,6 +39,9 @@ const Nav = () => {
     setSearchValue(value);
     setSearch(value.length > 0);
   }, []);
+  const toggleMobileNavMenu = useCallback(() => 
+    setMobileNav((mobileNav) => !mobileNav),
+  []);
   const userMenuComp = (
     <TopBar.UserMenu
         actions={[
@@ -92,6 +112,7 @@ const Nav = () => {
           searchField={searchBarComp}
           searchResults={searchResultsComp}
           onSearchResultsDismiss={handleSearchResultsDismiss}
+          onNavigationToggle={toggleMobileNavMenu}
       />
     )
     const logo = {
@@ -101,9 +122,160 @@ const Nav = () => {
       url: '#',
       accessibilityLabel: 'Shopify logo',
     };
-  return (
+    const SideBarComp = (
+      <div style={{marginLeft: '5px'}}>
+      <Navigation location="/"> 
+          <Navigation.Section
+              items={[{
+                label: <Button disclosure>Vandelay Industries</Button>
+              }]}
+          />
+          <Navigation.Section 
+            items={[
+              {
+                url: '#',
+                excludePaths: ['#'],
+                label: 'Home',
+                icon: HomeMinor,
+              },
+              {
+                url: '#',
+                excludePaths: ['#'],
+                label: 'Orders',
+                icon: OrdersMinor,
+              },
+              {
+                url: '#',
+                excludePaths: ['#'],
+                label: 'Products',
+                icon: ProductsMinor,
+              },
+              {
+                url: '#',
+                excludePaths: ['#'],
+                label: 'Customers',
+                icon:  CustomersMinor,
+              },
+              {
+                url: '#',
+                excludePaths: ['#'],
+                label: 'Finances',
+                icon: FinancesMinor,
+              },
+              {
+                url: '#',
+                excludePaths: ['#'],
+                label: 'Analytics',
+                icon: AnalyticsMinor,
+              },
+              {
+                url: '#',
+                excludePaths: ['#'],
+                label: 'Marketing',
+                icon: MarketingMinor,
+                selected: true,
+                subNavigationItems: [
+                  {
+                    url: '#',
+                    excludePaths: ['#'],
+                    disabled: false,
+                    label: 'Campaigns',
+                  },
+                  {
+                    url: '#',
+                    excludePaths: ['#'],
+                    disabled: false,
+                    label: 'Automations',
+                  },
+                ]
+              },
+              {
+                url: '#',
+                excludePaths: ['#'],
+                label: 'Discounts',
+                icon: DiscountsMinor,
+              },
+            ]}
+            
+          />
+          <Navigation.Section
+            title="Sales channels"
+            items={[
+              {
+                url: '#',
+                excludePaths: ['#'],
+                label: 'Online Store',
+                icon: StoreMinor,
+              },
+              {
+                url: '#',
+                excludePaths: ['#'],
+                label: 'Point of Sale',
+                icon: PointOfSaleMajor,
+              },
+              {
+                url: '#',
+                excludePaths: ['#'],
+                label: 'Shop',
+                icon: ButtonMinor,
+              },
+            ]}
+            action={{
+              accessibilityLabel: 'Add sales channel',
+              icon: ChevronRightMinor,
+              onClick: () => {},
+            }}
+          />
+          <Navigation.Section
+            title="Apps"
+            items={[
+              {
+                url: '#',
+                excludePaths: ['#'],
+                label: 'Shopify Email',
+                icon: InviteMinor,
+              },
+              {
+                url: '#',
+                excludePaths: ['#'],
+                label: 'Shopify Search & Dis..',
+                icon: SearchMinor,
+              },
+              {
+                url: '#',
+                excludePaths: ['#'],
+                label: 'Shopify Flow',
+                icon: WandMinor,
+              },
+            ]}
+            action={{
+              accessibilityLabel: 'See apps',
+              icon: ChevronRightMinor,
+              onClick: () => {},
+            }}
+          />
+          <Navigation.Section
+            items={[
+              {
+                url: '#',
+                excludePaths: ['#'],
+                label: 'Settings',
+                icon: SettingsMinor,
+              },
+            ]}
+          />
+        </Navigation>
+        </div>
+      )
+  return ( 
     <div style={{height:'70px'}}>
-      <Frame topBar={TopBarComp} logo={logo}/>
+      <Frame 
+        topBar={TopBarComp} 
+        logo={logo} 
+        navigation={SideBarComp} 
+        showMobileNavigation={mobileNav}
+        onNavigationDismiss={toggleMobileNavMenu}
+      />
     </div>
   );
 }
