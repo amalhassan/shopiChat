@@ -1,17 +1,27 @@
 import React, {useState, useCallback} from 'react';
-import {Frame, TopBar, Icon, Text, HorizontalStack} from '@shopify/polaris';
-import {ProfileMajor,  StoreMajor, LogOutMinor, NotificationMajor, FilterMinor, CircleTickOutlineMinor} from '@shopify/polaris-icons';
+import {Frame, TopBar, Icon, Text, HorizontalStack, ActionList} from '@shopify/polaris';
+import {ProfileMajor,  StoreMajor, LogOutMinor, NotificationMajor, FilterMinor, CircleTickOutlineMinor, AppsMajor, SettingsMajor,} from '@shopify/polaris-icons';
 const Nav = () => {
   const [userMenu, setUserMenu] = useState(false);
   const [notifyMenu, setNotifyMenu] = useState(false);
+  const [search, setSearch] = useState(false);
+  const [searchValue, setSearchValue] = useState('');
   const toggleUserMenu = useCallback(
     () => setUserMenu((userMenu) => !userMenu),
     [],
   );
   const toggleNotifyMenu = useCallback(
-    () => setNotifyMenu((notifyMenu) => !notifyMenu),
+    () => setNotifyMenu((notifyMenu) => !notifyMenu), 
     [],
   );
+  const handleSearchResultsDismiss = useCallback(() => {
+    setSearch(false);
+    setSearchValue('');
+  }, []);
+  const handleSearchChange = useCallback((value) => {
+    setSearchValue(value);
+    setSearch(value.length > 0);
+  }, []);
   const userMenuComp = (
     <TopBar.UserMenu
         actions={[
@@ -60,10 +70,28 @@ const Nav = () => {
         ]}
       />
     );
+    const searchResultsComp = (
+      <ActionList
+        items={[{content: 'Recommended Apps', icon: AppsMajor }, {content: 'App and sales channel setting', icon: SettingsMajor}]}
+      />
+    );
+  
+    const searchBarComp = (
+      <TopBar.SearchField
+        onChange={handleSearchChange}
+        value={searchValue}
+        placeholder="Search"
+        showFocusBorder
+      />
+    );
     const TopBarComp = (
       <TopBar
           userMenu={userMenuComp}
           secondaryMenu={NotifyMenuComp}
+          searchResultsVisible={search}
+          searchField={searchBarComp}
+          searchResults={searchResultsComp}
+          onSearchResultsDismiss={handleSearchResultsDismiss}
       />
     )
   return (
