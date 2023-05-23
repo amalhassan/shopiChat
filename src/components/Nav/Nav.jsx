@@ -1,13 +1,18 @@
 import React, {useState, useCallback} from 'react';
-import {Frame, TopBar} from '@shopify/polaris';
-import {ProfileMajor,  StoreMajor, LogOutMinor} from '@shopify/polaris-icons';
+import {Frame, TopBar, Icon, Text, HorizontalStack} from '@shopify/polaris';
+import {ProfileMajor,  StoreMajor, LogOutMinor, NotificationMajor, FilterMinor, CircleTickOutlineMinor} from '@shopify/polaris-icons';
 const Nav = () => {
-  const [userMenuOpen, setUserMenuOpen] = useState(false);
-  const toggleUserMenuOpen = useCallback(
-    () => setUserMenuOpen((userMenuOpen) => !userMenuOpen),
+  const [userMenu, setUserMenu] = useState(false);
+  const [notifyMenu, setNotifyMenu] = useState(false);
+  const toggleUserMenu = useCallback(
+    () => setUserMenu((userMenu) => !userMenu),
     [],
   );
-  const userMenu = (
+  const toggleNotifyMenu = useCallback(
+    () => setNotifyMenu((notifyMenu) => !notifyMenu),
+    [],
+  );
+  const userMenuComp = (
     <TopBar.UserMenu
         actions={[
           {
@@ -20,13 +25,45 @@ const Nav = () => {
         avatar='XA'
         initials='XA'
         name='Xquenda Andreev'
-        open={userMenuOpen}
-        onToggle={toggleUserMenuOpen}
+        open={userMenu}
+        onToggle={toggleUserMenu}
     />
     )
+    const NotifyMenuComp = (
+      <TopBar.Menu
+        activatorContent={
+          <span>
+            <Icon source={NotificationMajor} />
+            <Text as="span" visuallyHidden>
+              Notification menu
+            </Text>
+          </span>
+        }
+        open={notifyMenu}
+        onOpen={toggleNotifyMenu}
+        onClose={toggleNotifyMenu}
+        actions={[
+          {
+            items: [
+              {content: 
+              <HorizontalStack align='space-between' style={{width:'300px'}}>
+                <Text as='h2'>Alerts</Text>
+                <span>
+                  <Icon source={FilterMinor}></Icon>
+                  <Icon source={CircleTickOutlineMinor}></Icon>
+                </span>
+              </HorizontalStack>}]},
+            {items: [
+              {content: 'No alerts'}  
+            ]
+          },
+        ]}
+      />
+    );
     const TopBarComp = (
       <TopBar
-          userMenu={userMenu}
+          userMenu={userMenuComp}
+          secondaryMenu={NotifyMenuComp}
       />
     )
   return (
