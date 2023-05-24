@@ -2,11 +2,13 @@ import React from 'react';
 import './App.css';
 import { AppProvider } from '@shopify/polaris'; 
 import '@shopify/polaris/build/esm/styles.css';
+import {PolarisVizProvider} from '@shopify/polaris-viz';
 import Nav from './components/Nav/Nav'
 import { Marketing } from './pages/Marketing.jsx'
 
 function App() {
   return (
+    <PolarisVizProvider>
     <AppProvider i18n={{
       Polaris: {
         ResourceList: {
@@ -25,7 +27,8 @@ function App() {
     }}>
       <Nav />
       <Marketing />
-    </AppProvider>   
+    </AppProvider>  
+    </PolarisVizProvider> 
   )
 }
 

@@ -1,5 +1,5 @@
 import React, {useState, useCallback} from 'react';
-import {Frame, TopBar, Icon, Text, HorizontalStack, ActionList, Navigation, Button} from '@shopify/polaris';
+import {Frame, TopBar, Icon, Text, HorizontalStack, ActionList, Navigation, Button, Box} from '@shopify/polaris';
 import {ProfileMajor,  StoreMajor, LogOutMinor, NotificationMajor, FilterMinor, CircleTickOutlineMinor, AppsMajor, SettingsMajor, 
   HomeMinor, 
   OrdersMinor,
@@ -125,11 +125,9 @@ const Nav = () => {
     const SideBarComp = (
       <div style={{marginLeft: '5px'}}>
       <Navigation location="/"> 
-          <Navigation.Section
-              items={[{
-                label: <Button disclosure>Vandelay Industries</Button>
-              }]}
-          />
+          <Box width='70%' style={{marginLeft:'20px', marginRight: '15px', marginBottom: '10px'}}>
+            <Button fullWidth size='medium' textAlign="left" disclosure>Vandelay Industries</Button>
+          </Box>
           <Navigation.Section 
             items={[
               {
