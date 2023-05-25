@@ -7,6 +7,17 @@ import {
 import { SparkLineChart } from '@shopify/polaris-viz';
 export const Marketing = () => {
   const data = [{key: 0, value:0}, {key: 0, value:0}, {key: 0, value:0}, {key: 0, value:0}, {key: 0, value:0}, {key: 0, value:0}, {key: 0, value:0}, {key: 0, value:0}, {key: 0, value:0}]
+  const rows = [];
+  const emptyStateComp = (
+    <div style={{display: 'flex', justifyContent: 'center', alignContent: 'center', width: '100%', height: '100%', borderBottom: "solid #d3d3d3 1px"}}>
+      <EmptyState
+        heading="No data found for the date range selected"
+        fullWidth
+      >
+        <Text>Please select a different period</Text>
+      </EmptyState>
+    </div>
+  )
   return (
     <Page
       title="Marketing"
@@ -159,7 +170,50 @@ export const Marketing = () => {
       </Grid>
       </div>
       </Layout.Section>
-      
+      <Layout.Section>
+        <AlphaCard padding='2' marginBottom='30px'>
+          <Box padding="2">
+            <HorizontalStack align='space-between'>
+                <Text as="h2" variant="headingMd">Top channel performance</Text>
+                <div style={{width: '20px'}}>
+                  <Icon color="base" source={AnalyticsMinor}/>
+                </div>
+            </HorizontalStack>
+          </Box>
+          <Box padding="2">
+            <Text variant='BodyMd'>Reporting is based on your UTM parameters and connected app activities to your online store. Reported with a 30-day attribution window.</Text>
+            <Link>Learn more</Link>
+          </Box>
+          <DataTable
+            columnContentTypes={[
+              'text',
+              'text',
+              'text',
+              'text',
+              'text',
+              'text',
+              'text'
+            ]}
+            headings={[
+              'Channel',
+              'Sales',
+              'Sessions',
+              'Orders',
+              'Conversion rate',
+              'AOV',
+              'First time customers'
+            ]}
+            sortable={[false, true, true, true, false, true, true]}
+            rows={rows}
+            />
+              <Box minHeight='200px'>
+              {rows.length > 0 ? rows : emptyStateComp}
+              </Box>
+              <Box padding="2">
+                <Link removeUnderline>View channel report</Link>
+              </Box>
+            </AlphaCard>
+        </Layout.Section>
       </Layout>
       <Box as='div' position='absolute' insetBlockEnd='0' insetInlineEnd='0' padding='4'>
         <Chatbot />

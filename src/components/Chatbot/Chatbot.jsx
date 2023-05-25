@@ -43,10 +43,10 @@ const Chatbot = () => {
       console.log(res);
       setDisabled(false);
       const chatId = createId();
-      messages.push({id: chatId, by: 'ShoppyChat', value: res.answer});
+      messages.push({id: chatId, by: 'ShopiChat', value: res.answer});
     } catch (error) {
       const errorId = createId();
-      messages.push({id: errorId, by: 'ShoppyChat', value: "something went wrong. Try again."});
+      messages.push({id: errorId, by: 'ShopiChat', value: "something went wrong. Try again."});
       console.log(error)
     }
     } )()
@@ -54,12 +54,12 @@ const Chatbot = () => {
   return (
     <Box as='div'  minWidth='20rem' style={{backgroundColor: 'white', padding:'8'}}>
       <div style={{padding: '10px', backgroundColor: '#FBFBFB'}}>
-        <Text as='h4' alignment='center' variant='bodyLg'>ShoppyChat</Text>
+        <Text as='h4' alignment='center' variant='bodyLg'>ShopiChat</Text>
       </div>
       <Box as='div' paddingBlockStart='4' paddingBlockEnd='4' style={{maxHeight: '400px', minHeight: '400px', display: 'flex', flexDirection: 'column', overflow: 'auto'}}>
         {messages.map((msg) => (
           <div id={msg.id} style={{
-            textAlign: `${msg.by === 'ShoppyChat' ? 'left' : 'right'}`,
+            textAlign: `${msg.by === 'ShopiChat' ? 'left' : 'right'}`,
             width: '100%',
             display: 'flex',
             justifyContent: 'space-between',
@@ -67,7 +67,7 @@ const Chatbot = () => {
             padding: '1rem 0',
             height: '100%'
           }}>
-            {msg.by === 'ShoppyChat' ?
+            {msg.by === 'ShopiChat' ?
               <div style={{
                 display: 'flex',
                 gap: '1rem',
@@ -126,7 +126,7 @@ const Chatbot = () => {
           connectedRight={<Button color='success' icon={SendMajor} onClick={getQuestion} disabled={isDisabled}></Button>}
         />
         <div style={{padding: '4px', paddingTop: '7px', minWidth: '290px'}}>
-          <Text>Learn more about <Link>ShoppyChat</Link></Text>
+          <Text>Learn more about <Link>ShopiChat</Link></Text>
         </div>
       </div>
     </Box>
