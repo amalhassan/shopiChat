@@ -1,61 +1,90 @@
-import { TextField, Button, Box, Avatar } from '@shopify/polaris'
+import { TextField, Button, Box, Avatar, Text, Link } from '@shopify/polaris'
 import { SendMajor } from '@shopify/polaris-icons'
 import { useState, useCallback } from 'react'
 
 const Chatbot = () => {
-  const [textFieldValue, setTextFieldValue] = useState('')
-  const [messages, setMessages] = useState([
-    {
-      id: '1',
-      by: 'user',
-      value: 'Hello there!',
-    },
-    {
-      id: '2',
-      by: 'Chat Bot',
-      value: 'Hello there!',
-    },
-    {
-      id: '3',
-      by: 'user',
-      value: 'Hello there!',
-    },
-    {
-      id: '4',
-      by: 'Chat Bot',
-      value: 'Hello there!',
-    },
-  ])
-
+  const [textFieldValue, setTextFieldValue] = useState('');
+  const [isDisabled, setDisabled] = useState(false);
+  const [messages, setMessages] = useState([])
+  function createId() {
+    let result = '';
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const charactersLength = characters.length;
+    let counter = 0;
+    while (counter < 6) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+      counter += 1;
+    }
+    return result;
+}
   const handleTextFieldChange = useCallback(
-    (value) => setTextFieldValue(value),
+    (value) => {
+      setTextFieldValue(value) 
+    },
     [],
   )
-
+  const handleClearButtonClick = useCallback(() => setTextFieldValue(''), []);
+  const getQuestion = () => {
+    console.log("textField", textFieldValue)
+    const id = createId();
+    messages.push({id, by: 'user', value: textFieldValue});
+    setTextFieldValue("");
+    setDisabled(true);
+    (async function () {
+      try {
+      const response = await fetch("http://127.0.0.1:5000/ask", {
+        method: "POST", 
+        headers: {
+          "Content-Type": "application/json",
+        },
+         body: JSON.stringify({question: textFieldValue})
+      });
+      const res = await response.json();
+      console.log(res);
+      setDisabled(false);
+      const chatId = createId();
+      messages.push({id: chatId, by: 'ShoppyChat', value: res.answer});
+    } catch (error) {
+      const errorId = createId();
+      messages.push({id: errorId, by: 'ShoppyChat', value: "something went wrong. Try again."});
+      console.log(error)
+    }
+    } )()
+  }
   return (
-    <Box as='div' padding='4' minWidth='20rem'>
-      <Box as='div' overflowY='auto' paddingBlockStart='4' paddingBlockEnd='4'>
+    <Box as='div'  minWidth='20rem' style={{backgroundColor: 'white', padding:'8'}}>
+      <div style={{padding: '10px', backgroundColor: '#FBFBFB'}}>
+        <Text as='h4' alignment='center' variant='bodyLg'>ShoppyChat</Text>
+      </div>
+      <Box as='div' paddingBlockStart='4' paddingBlockEnd='4' style={{maxHeight: '400px', minHeight: '400px', display: 'flex', flexDirection: 'column', overflow: 'auto'}}>
         {messages.map((msg) => (
           <div id={msg.id} style={{
-            textAlign: `${msg.by === 'Chat Bot' ? 'left' : 'right'}`,
+            textAlign: `${msg.by === 'ShoppyChat' ? 'left' : 'right'}`,
             width: '100%',
             display: 'flex',
             justifyContent: 'space-between',
-            backgroundColor: 'white',
-            borderRadius: '8px',
-            padding: '1rem 0'
+            backgroundColor: '#FBFBFB',
+            padding: '1rem 0',
+            height: '100%'
           }}>
-            {msg.by === 'Chat Bot' ?
+            {msg.by === 'ShoppyChat' ?
               <div style={{
                 display: 'flex',
                 gap: '1rem',
                 padding: '1rem',
+                borderRadius: '4px',
               }}>
+                <div style={{height: '60px'}}>
                 <Avatar source='https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg' />
+                </div>
                 <p style={{
                   backgroundColor: '#87E2AC',
                   flexGrow: '1',
-                  width: '100%'
+                  width: '100%',
+                  borderRadius: '4px',
+                  padding: '5px',
+                  maxWidth: '280px',
+                  height: 'fit-content'
                 }}>
                   {msg.value}
                 </p>
@@ -68,29 +97,38 @@ const Chatbot = () => {
                 marginLeft: 'auto',
               }}>
                 <p style={{
-                  backgroundColor: '#E1ECFD',
+                  backgroundColor: '#FFFFFF',
                   flexGrow: '1',
-                  width: '100%'
+                  width: '100%',
+                  borderRadius: '4px',
+                  textAlign: 'left',
+                  padding: '3px',
+                  maxWidth: '200px',
                 }}>
                   {msg.value}
                 </p>
-                <Avatar customer={true} />
+                <div style={{height: '60px'}}>
+                  <Avatar size='small' initials='XA' />
+                </div>
               </div>
             }
           </div>
         ))}
       </Box>
-      <div>
+      <div style={{padding: '12px'}}>
         <TextField
           value={textFieldValue}
           onChange={handleTextFieldChange}
           placeholder='Ask a question...'
           autoComplete='off'
-          connectedRight={<Button color='success' icon={SendMajor}></Button>}
+          clearButton
+          onClearButtonClick={handleClearButtonClick}
+          connectedRight={<Button color='success' icon={SendMajor} onClick={getQuestion} disabled={isDisabled}></Button>}
         />
+        <div style={{padding: '4px', paddingTop: '7px', minWidth: '290px'}}>
+          <Text>Learn more about <Link>ShoppyChat</Link></Text>
+        </div>
       </div>
-
-
     </Box>
   )
 }
